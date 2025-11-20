@@ -1,0 +1,22 @@
+[project]
+name = "civitai-mcp-server"
+version = "0.2.0"
+description = "MCP server for Civitai AI image generation"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "aiohttp>=3.13.2",
+    "civitai-py>=0.1.10",
+    "fastapi>=0.121.2",
+    "mcp>=1.21.2",
+    "pydantic-settings>=2.12.0",
+    "uvicorn>=0.38.0",
+]
+
+[project.scripts]
+civitai-mcp = "mcp_server:main"
+
+[dependency-groups]
+dev = [
+    "requests>=2.32.5",
+]
