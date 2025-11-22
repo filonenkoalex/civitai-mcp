@@ -138,6 +138,7 @@ Add to \`claude_desktop_config.json\`:
 - [Architecture](docs/architecture/PROPOSED_ARCHITECTURE.md) - Design details
 - [Diagrams](docs/architecture/DIAGRAMS.md) - Visual architecture
 - [Refactoring](docs/REFACTORING.md) - What was changed
+- [Debugging Guide](docs/DEBUGGING.md) - Debug with VS Code and MCP Inspector
 
 ## Development
 
@@ -165,10 +166,30 @@ civitai-mcp-v2/
 - Type hints everywhere
 - Comprehensive docstrings
 
-## Testing
+## Testing & Debugging
+
+### Test with MCP Inspector
 
 \`\`\`bash
-# Test API manually
+# Install MCP Inspector
+npm install -g @modelcontextprotocol/inspector
+
+# Run inspector with your MCP server
+npx @modelcontextprotocol/inspector uv --directory "$(pwd)" run python -m src.mcp.main
+\`\`\`
+
+### Debug in VS Code
+
+1. **Set breakpoints** in your code
+2. **Press F5** to start debugging
+3. **Run inspector** in another terminal: `./scripts/debug_with_inspector.sh`
+4. **Trigger tools** from inspector - VS Code will hit your breakpoints!
+
+See [Debugging Guide](docs/DEBUGGING.md) for detailed instructions.
+
+### Test API Manually
+
+\`\`\`bash
 curl http://localhost:8000/health
 \`\`\`
 

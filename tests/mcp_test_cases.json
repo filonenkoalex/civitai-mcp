@@ -1,0 +1,115 @@
+{
+  "description": "MCP Inspector Test Cases for Civitai Image Generation",
+  "test_cases": [
+    {
+      "name": "Basic Image Generation",
+      "description": "Generate a simple landscape image",
+      "tool": "generate_image",
+      "parameters": {
+        "model": "urn:air:sd1:checkpoint:civitai:4384@128713",
+        "prompt": "a serene mountain landscape at sunset, beautiful colors",
+        "width": 512,
+        "height": 512
+      },
+      "expected": "Returns base64 encoded image data URI",
+      "debug_points": [
+        "Line 45 in src/mcp/server.py - Check request object",
+        "Line 57 in src/mcp/server.py - Before API call",
+        "Line 64 in src/mcp/server.py - Check result encoding"
+      ]
+    },
+    {
+      "name": "Image with Negative Prompt",
+      "description": "Generate image with quality controls",
+      "tool": "generate_image",
+      "parameters": {
+        "model": "urn:air:sd1:checkpoint:civitai:4384@128713",
+        "prompt": "a portrait of a cat, professional photography",
+        "negative_prompt": "blurry, bad quality, distorted",
+        "width": 768,
+        "height": 768,
+        "steps": 30,
+        "cfg_scale": 8.5
+      },
+      "expected": "Higher quality image with negative prompt applied",
+      "debug_points": [
+        "Check negative_prompt is passed correctly",
+        "Verify steps and cfg_scale in API request"
+      ]
+    },
+    {
+      "name": "Reproducible Generation (with Seed)",
+      "description": "Generate same image twice using seed",
+      "tool": "generate_image",
+      "parameters": {
+        "model": "urn:air:sd1:checkpoint:civitai:4384@128713",
+        "prompt": "a futuristic cityscape at night",
+        "width": 1024,
+        "height": 512,
+        "seed": 42,
+        "steps": 25
+      },
+      "expected": "Same image when run multiple times",
+      "debug_points": [
+        "Verify seed value is included in request",
+        "Check Civitai API response includes same seed"
+      ]
+    },
+    {
+      "name": "Quick Test (Fast Model)",
+      "description": "Use default settings for quick testing",
+      "tool": "generate_image",
+      "parameters": {
+        "model": "urn:air:sd1:checkpoint:civitai:4384@128713",
+        "prompt": "a simple red apple",
+        "width": 512,
+        "height": 512,
+        "steps": 15
+      },
+      "expected": "Completes quickly with fewer steps",
+      "debug_points": [
+        "Monitor polling interval",
+        "Check timeout handling"
+      ]
+    },
+    {
+      "name": "Large Image Generation",
+      "description": "Test with larger dimensions",
+      "tool": "generate_image",
+      "parameters": {
+        "model": "urn:air:sd1:checkpoint:civitai:4384@128713",
+        "prompt": "an epic fantasy landscape with mountains and castles",
+        "width": 1024,
+        "height": 768,
+        "steps": 30,
+        "cfg_scale": 7.5
+      },
+      "expected": "Larger image, may take longer to generate",
+      "debug_points": [
+        "Check memory usage with larger images",
+        "Verify base64 encoding doesn't fail"
+      ]
+    }
+  ],
+  "debugging_tips": {
+    "before_testing": [
+      "Set breakpoint at line 45 in src/mcp/server.py",
+      "Set breakpoint at line 57 in src/mcp/server.py",
+      "Start debug session with F5",
+      "Run ./scripts/debug_with_inspector.sh"
+    ],
+    "during_testing": [
+      "Watch the 'request' variable to see parsed parameters",
+      "Step through (F10) to see each API call",
+      "Check Debug Console for async operation status",
+      "Use Variables pane to inspect response data"
+    ],
+    "common_issues": {
+      "timeout": "Increase timeout parameter if model is slow",
+      "invalid_model": "Check model URN format from civitai.com",
+      "api_error": "Verify CIVITAI_API_TOKEN in .env file",
+      "encoding_error": "Check image_data is bytes before base64 encoding"
+    }
+  }
+}
+

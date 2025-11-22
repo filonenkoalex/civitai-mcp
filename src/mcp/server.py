@@ -1,10 +1,12 @@
 """MCP server setup for Civitai image generation."""
 
 import base64
+
 from mcp.server.fastmcp import FastMCP
+
+from src.contracts.requests import GenerateImageRequest
 from src.core.config.settings import settings
 from src.core.services.civitai_service import CivitaiService
-from src.contracts.requests import GenerateImageRequest
 
 # Validate settings
 settings.validate_token()
@@ -22,11 +24,11 @@ async def generate_image(
     prompt: str,
     width: int = 512,
     height: int = 512,
-    negative_prompt: str = None,
+    negative_prompt: str = "",
     steps: int = 20,
     cfg_scale: float = 7.0,
-    seed: int = None,
-    timeout: int = 300
+    seed: int = -1,
+    timeout: int = 300,
 ) -> str:
     """Generate an AI image using Civitai.
 
@@ -50,18 +52,16 @@ async def generate_image(
         negative_prompt=negative_prompt,
         steps=steps,
         cfg_scale=cfg_scale,
-        seed=seed
+        seed=seed,
     )
 
     # Generate and download image
     result = await service.generate_and_download(
-        request=request,
-        timeout=timeout,
-        poll_interval=3
+        request=request, timeout=timeout, poll_interval=3
     )
 
     # Encode image as base64
-    image_b64 = base64.b64encode(result['image_data']).decode('utf-8')
+    image_b64 = base64.b64encode(result["image_data"]).decode("utf-8")
 
     # Return as data URI
     return f"data:image/png;base64,{image_b64}"
